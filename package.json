@@ -17,7 +17,6 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
-    "endent": "^2.1.0",
     "pinia": "^3.0.4",
     "vue": "^3.5.38",
     "vue-mermaid-string": "^8.0.2",
