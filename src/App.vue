@@ -4,7 +4,7 @@ import VueMermaidString from 'vue-mermaid-string'
 import endent from 'endent'
 const text = ref("no node")
 const diagram = computed(() => 'graph BT\n  E(Ebene) --> L(Land)\nE --> A(AnderesLand)\nclick E\nclick L\nclick A')
-function nodeClick(nodeId){
+function nodeClick(nodeId:string){
   text.value = nodeId;
   console.log(nodeId)
 }
