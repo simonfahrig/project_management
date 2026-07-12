@@ -3,11 +3,15 @@ on:
   push:
     branches:
       - master
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   deploy-project:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -20,17 +24,17 @@ jobs:
       - name: Clean install dependencies
         run: npm ci
 
-      - name: build project
+      - name: Build project
         run: npm run build
 
-     # Deploys the built project to the gh\-pages branch
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist' # Lädt den dist-Ordner hoch
+
       - name: Deploy to GitHub Pages
-        run: |
-          cd dist
-          git config --global user.email "${{ secrets.EMAIL }}"
-          git config --global user.name "${{ github.actor }}"
-          git init
-          git add -A
-          git commit -m 'Automated deployment'
-          git push -f https://${{ github.actor }}:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git master:gh-pages
-        shell: bash
+        id: deployment
+        uses: actions/deploy-pages@v4
