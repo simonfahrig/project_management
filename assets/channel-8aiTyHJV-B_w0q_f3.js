@@ -1,0 +1,1 @@
+import{Mt as e,Tn as t}from"./index-Ds5IxBoD.js";var n=(n,r)=>t.lang.round(e.parse(n)[r]);export{n as t};
