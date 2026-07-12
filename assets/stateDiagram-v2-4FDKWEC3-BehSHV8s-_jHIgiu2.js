@@ -1,0 +1,1 @@
+import{mn as e}from"./index-B80Zit0O.js";import{i as t,n,r,t as i}from"./chunk-DI55MBZ5-B1JuynTu-DRy8-a-G.js";var a={parser:i,get db(){return new n(2)},renderer:t,styles:r,init:e(e=>{e.state||={},e.state.arrowMarkerAbsolute=e.arrowMarkerAbsolute},`init`)};export{a as diagram};

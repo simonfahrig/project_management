@@ -1,0 +1,1 @@
+import{n as e}from"./graph-CVVLTrhn-C0upVP5v.js";var t=4;function n(n){return e(n,t)}export{n as t};
