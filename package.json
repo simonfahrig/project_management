@@ -18,6 +18,9 @@
     "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
+    "bootstrap": "^5.3.8",
+    "chart.js": "^4.5.1",
+    "chartjs": "^0.3.24",
     "pinia": "^3.0.4",
     "vue": "^3.5.39",
     "vue-mermaid-string": "^8.0.2",
