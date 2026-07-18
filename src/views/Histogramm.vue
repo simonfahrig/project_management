@@ -7,14 +7,14 @@ const props = defineProps(["projectName", "startDate", "endDate", "cancelled"])
 
 // 1. Chart.js Komponenten registrieren (Tree-Shaking)
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend)
-const chartInstance = ref<Chart>(null)
-const histogramCanvas = ref<ChartItem>(null)
+const chartInstance = ref<Chart|null>(null)
+const histogramCanvas = ref<ChartItem|null>(null)
 
 // Beispieldaten
 const rawData = inject<number[]>('simulation')
 
 onMounted (() => {
-    const array: number[] = rawData?.value
+    const array: number[] = rawData?.value ?? []
     const min = Math.min.apply(null, array)
     const max = Math.max.apply(null, array)
 
@@ -35,14 +35,14 @@ onMounted (() => {
     for (let i = 0; i <= binsCount; i ++) { 
         const labelDays = earlyEnd + (i * intervalSize)
         const labelDate = new Date(labelDays)
-        binLabels[i] = isNaN(labelDate) ? "NaN" : labelDate.toISOString().split('T')[0]
+        binLabels[i] = isNaN(labelDate.getTime()) ? "NaN" : labelDate.toISOString().split('T')[0] ?? ""
     }
 
     // Daten einsortieren
     const bins: number[] = Array<number>(binsCount).fill(0)
     array.forEach(val => {
         const binNumber = Math.floor((val - min) / binSize)
-        bins[binNumber]++
+        bins[binNumber] = (bins[binNumber] ?? 0) + 1
     })
 
     // Add cancellation bin
@@ -52,7 +52,7 @@ onMounted (() => {
     bins.push(props.cancelled)
 
     // 3. Chart direkt auf dem Canvas-Element instanziieren
-    chartInstance.value = new Chart(histogramCanvas.value, {
+    chartInstance.value = new Chart(histogramCanvas.value ?? "", {
         type: 'bar',
         data: {
             labels: binLabels,

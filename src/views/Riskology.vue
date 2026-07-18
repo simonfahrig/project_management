@@ -3,7 +3,7 @@ import { onMounted, reactive, ref, watch, provide, computed } from 'vue'
 import Histogramm from './Histogramm.vue'
 import type { Risk, RiskSpec } from './../components/Risk.ts'
 
-const projectName = ref("Gebiete App")
+const projectName = ref("Project Whizbang")
 const startDate = ref(new Date(2026, 6).toISOString().substr(0, 10))
 const endDate = ref(new Date(2027, 6).toISOString().substr(0, 10))
 const risks = reactive<Risk[]>([
@@ -17,20 +17,20 @@ const risks = reactive<Risk[]>([
             worstPenalty: 55,
             mostlikelyPenalty: 5,
             bestPenalty: 0,
-            probability: null,
-            isFatal: null,
-            timePenaltyInMonths: null,
-            timePenaltyPercenage: null,
+            probability: 0,
+            isFatal: false,
+            timePenaltyInMonths: 0,
+            timePenaltyPercenage: 0,
         },
     },
 ])
 
 const cancelled = ref(0)
 const runs = ref(1000)
-const simulation = ref<number[] | null>(null)
+const simulation = ref<number[]>([0])
 const median = ref<string>("")
 const cancellationRisk = computed(() => {
-    return Math.floor(cancelled.value * 1000.0 / (simulation.value - length + cancelled.value)) / 10
+    return Math.floor(cancelled.value * 1000.0 / (simulation.value.length + cancelled.value)) / 10
 })
 
 simulateRun(runs.value)
@@ -51,17 +51,17 @@ function simulateRun(size: number) {
     median.value = getMedian(reverseCancelled)
 }
 
-function getMedian(array: number[]): number {
+function getMedian(array: number[]): string {
     const sorted = [...array].sort((a, b) => a - b);
     const mid = Math.floor(sorted.length / 2);
     // If even, average the two middle numbers; if odd, return the middle
-    const medianFactor = sorted.length % 2 == 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+    const medianFactor = sorted.length % 2 == 0 ? ((sorted[mid - 1] ?? 0) + (sorted[mid] ?? 0)) / 2 : (sorted[mid] ?? 0);
     const start = new Date(startDate.value);
     const end = new Date(endDate.value);
     const originalPeriod = end.getTime() - start.getTime()
     const medianDays = start.getTime() + (medianFactor * originalPeriod)
     const medianDate = new Date(medianDays)
-    return isNaN(medianDate) ? "NaN" : medianDate.toISOString().substr(0, 10)
+    return isNaN(medianDate.getTime()) ? "NaN" : medianDate.toISOString().substr(0, 10)
 }
 
 function getOverallMultiplyer(): number {
@@ -150,7 +150,7 @@ function getMultiplyerBinary(risk: Risk, rand: number): number {
                 </div>
                 <div class="d-flex w-100 justify-content-between">
                     <h4>Cancellation Risk:</h4>
-                    <h4>{{ cancelllationRisk }} %</h4>
+                    <h4>{{ cancellationRisk }} %</h4>
                 </div>
             </div>
 
