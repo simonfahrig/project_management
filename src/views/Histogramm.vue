@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, inject } from 'vue'
+import { ref, onMounted, onBeforeUnmount, inject, type Ref } from 'vue'
 import { Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js'
 import type { ChartItem } from 'chart.js'
 
@@ -11,10 +11,10 @@ const chartInstance = ref<Chart|null>(null)
 const histogramCanvas = ref<ChartItem|null>(null)
 
 // Beispieldaten
-const rawData = inject<number[]>('simulation')
+const rawData = inject<Ref<number[]>>('simulation', ref([]))
 
 onMounted (() => {
-    const array: number[] = rawData?.value ?? []
+    const array: number[] = rawData?.value
     const min = Math.min.apply(null, array)
     const max = Math.max.apply(null, array)
 
