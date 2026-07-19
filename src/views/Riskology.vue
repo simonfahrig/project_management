@@ -335,13 +335,21 @@ function getMultiplyerBinary(risk: Risk, rand: number): number {
         return factor
     }
 }
+
+function addRisk() {
+
+}
+
+function removeRisk(id: number) {
+    // risks.splice(id - 1, 1)
+}
 </script>
 
 <template>
     <div class="container">
         <div class="row">
             <!-- Linke Spalte -->
-            <div class="col-1g-6">
+            <div class="col-lg-6">
                 <h3>Project Details</h3>
                 <div class="input-group input-group-sm mb-3">
                     <span class="input-group-text" id="addon-wrapping">Project Name</span>
@@ -379,7 +387,7 @@ function getMultiplyerBinary(risk: Risk, rand: number): number {
             </div>
 
             <!-- Rechte Spalte -->
-            <div class="col-1g-6">
+            <div class="col-lg-6">
                 <h3>Risks</h3>
                 <ul class="list-group" style="overflow: scroll; max-height:700px">
                     <a href="#" class="list-group-item" v-for="risk in risks" :key="risk.id">
@@ -391,12 +399,12 @@ function getMultiplyerBinary(risk: Risk, rand: number): number {
                             <div class="col-11">
                                 <!-- </div> -->
                                 <div class="d-flex w-100 justify-content-between">
-
+                                    <h5 class="mb-1" :class="{ 'text-muted': risk.status == false }">{{ risk.id }}. {{ risk.title + (risk.riskSpec.isFatal ? " (Fatal)" : "") }}</h5>
                                     <div class="d-flex">
                                         <input class="form-check-input me-1" type="checkbox" value="isBinary"
                                             :id="risk.title" v-model="risk.isBinaryRisk">
                                         <label :for="risk.title" class="me-4">binary risk</label>
-                                        <button type="button" class="btn-close" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" aria-label="Close" @click="removeRisk(risk.id)"></button>
                                     </div>
                                 </div>
                                 <p class="mb-1" :class="{ 'text-muted': risk.status == false }">{{ risk.description }}
@@ -429,7 +437,7 @@ function getMultiplyerBinary(risk: Risk, rand: number): number {
                         </div>
                     </a>
                 </uL>
-                <button type="button" class="btn btn-primary"> + Add Risk</button>
+                <button type="button" class="btn btn-primary" @click="addRisk"> + Add Risk</button>
             </div>
         </div>
     </div>
