@@ -341,35 +341,33 @@ function addRisk() {
 }
 
 function removeRisk(id: number) {
-    // risks.splice(id - 1, 1)
+    risks.splice(id, 1)
 }
 </script>
 
 <template>
-    <div class="container">
+    <div class="container mt-4">
+        <div class="row my-2">
+            <h1>Monte-Carlo-Projektrisiko-Analysator</h1>
+            <p>Dieses Tool berechnet das realistische Fertigstellungsdatum eines Projekts unter Berücksichtigung dynamischer Risikofaktoren. Durch statistische Simulationen wandelt es Einzelrisiken in eine verlässliche Gesamtfahrplan-Prognose um.</p>
+        </div>
         <div class="row">
             <!-- Linke Spalte -->
             <div class="col-lg-6">
                 <h3>Project Details</h3>
-                <div class="input-group input-group-sm mb-3">
+                <div class="input-group input-group-sm mb-2">
                     <span class="input-group-text" id="addon-wrapping">Project Name</span>
                     <input v-model="projectName" type="text" class="form-control" placeholder="Whizbang"
                         aria-label="Project Name" aria-describedby="addon-wrapping">
                 </div>
-                <div class="input-group input-group-sm mb-3">
+                <div class="input-group input-group-sm mb-2">
                     <span class="input-group-text" id="addon-wrapping">Project start date</span>
                     <input v-model="startDate" type="date" class="form-control" aria-label="StartDate"
                         aria-describedby="addon-wrapping">
                     <span class="input-group-text" id="addon-wrapping">Most optimistic end date</span> <input
                         v-model="endDate" type="date" class="form-control" aria-label="EndDate"
                         aria-describedby="addon-wrapping">
-
                 </div>
-                <div class="d-flex w-100 justify-content-between">
-                    <h3>Project Simulation ({{ simulation!.length + cancelled }} Runs)</h3>
-                </div>
-                <Histogramm :projectName="projectName" :startDate="startDate" :endDate="endDate" :cancelled="cancelled"
-                    :key="renderKey" />
                 <div class="input-group input-group-sm mb-3">
                     <span class="input-group-text" id="addon-wrapping">Runs</span>
                     <input v-model="runs" type="number" class="form-control" placeholder="Whizbang"
@@ -384,27 +382,32 @@ function removeRisk(id: number) {
                     <h4>Cancellation Risk:</h4>
                     <h4>{{ cancellationRisk }} %</h4>
                 </div>
+                <div class="d-flex w-100 justify-content-between my-2 mt-4">
+                    <h3>Project Simulation ({{ simulation!.length + cancelled }} Runs)</h3>
+                </div>
+                <Histogramm :projectName="projectName" :startDate="startDate" :endDate="endDate" :cancelled="cancelled"
+                    :key="renderKey" />
             </div>
 
             <!-- Rechte Spalte -->
             <div class="col-lg-6">
                 <h3>Risks</h3>
                 <ul class="list-group" style="overflow: scroll; max-height:700px">
-                    <a href="#" class="list-group-item" v-for="risk in risks" :key="risk.id">
-                        <!-- <div class="container"> -->
+                    <a href="#" class="list-group-item" v-for="risk in risks" :key="risks.indexOf(risk)">
                         <div class="row">
                             <div class="col-1">
                                 <input class="form-check-input me-1" type="checkbox" value="" v-model="risk.status">
                             </div>
                             <div class="col-11">
-                                <!-- </div> -->
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1" :class="{ 'text-muted': risk.status == false }">{{ risk.id }}. {{ risk.title + (risk.riskSpec.isFatal ? " (Fatal)" : "") }}</h5>
+                                    <h5 class="mb-1" :class="{ 'text-muted': risk.status == false }">{{ risks.indexOf(risk) + 1 }}. {{
+                                        risk.title + (risk.riskSpec.isFatal ? " (Fatal)" : "") }}</h5>
                                     <div class="d-flex">
                                         <input class="form-check-input me-1" type="checkbox" value="isBinary"
                                             :id="risk.title" v-model="risk.isBinaryRisk">
                                         <label :for="risk.title" class="me-4">binary risk</label>
-                                        <button type="button" class="btn-close" aria-label="Close" @click="removeRisk(risk.id)"></button>
+                                        <button type="button" class="btn-close" aria-label="Close"
+                                            @click="removeRisk(risks.indexOf(risk))"></button>
                                     </div>
                                 </div>
                                 <p class="mb-1" :class="{ 'text-muted': risk.status == false }">{{ risk.description }}
